@@ -9,7 +9,7 @@ class Unit {
   Unit.fromJson(Map jsonMap) 
     : assert(jsonMap['name'] != null),
       this.name = jsonMap['name'],
-      this.conversion = jsonMap['conversion'],
+      this.conversion = jsonMap['conversion'].toDouble(),
       this.isBaseUnit = jsonMap['isBaseUnit'] != null ? jsonMap['isBaseUnit'] : false;
   
 

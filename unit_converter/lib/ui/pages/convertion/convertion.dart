@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:unit_converter/models/unit-group.dart';
 import 'package:unit_converter/models/unit.dart';
+import 'package:unit_converter/services/currency.dart';
 import 'package:unit_converter/ui/components/dropdown/dropdown.dart';
 import 'package:unit_converter/ui/components/input/input.dart';
 
@@ -82,7 +85,7 @@ class Convertion extends State {
     });
   }
 
-  void convertUnits() {
+  void convertUnits() async {
     if(this.firstAreaUnit == null) {
       setState(() {
         this.firstAreaUnit = this.unitGroup.units[0];
@@ -95,12 +98,29 @@ class Convertion extends State {
       });
     }
 
-    setState(() {
-      double multOutput = (this.input * this.secondAreaUnit.conversion);
-      this.outputController.text = (multOutput / (this.firstAreaUnit.conversion)).toString();
+    final convertionResponseOutput = await Currency().getConversion(
+      this.firstAreaUnit.name, this.secondAreaUnit.name, this.input
+    );
 
-      double multInput = (this.output * this.firstAreaUnit.conversion);
-      this.inputController.text = (multInput / (this.secondAreaUnit.conversion)).toString();
+    final convertionResponseInput = await Currency().getConversion(
+      this.secondAreaUnit.name, this.firstAreaUnit.name, this.output
+    );
+
+    setState(() {
+      if(this.unitGroup.name != 'Currency') {
+        double multOutput = (this.input * this.secondAreaUnit.conversion);
+        this.outputController.text = (multOutput / (this.firstAreaUnit.conversion)).toString();
+
+        double multInput = (this.output * this.firstAreaUnit.conversion);
+        this.inputController.text = (multInput / (this.secondAreaUnit.conversion)).toString();
+      } else {
+        final responseOutput = jsonDecode(convertionResponseOutput.data)['conversion'];
+        final responseInput = jsonDecode(convertionResponseInput.data)['conversion'];
+
+        this.outputController.text = responseOutput != null ? responseOutput.toString() : '';
+
+        this.inputController.text = responseInput != null ? responseInput.toString() : '';
+      }
     });
   }
 

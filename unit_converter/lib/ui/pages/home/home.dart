@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:unit_converter/models/unit-group.dart';
 import 'package:unit_converter/models/unit.dart';
+import 'package:unit_converter/services/currency.dart';
 import 'package:unit_converter/ui/components/unit-row/unit_row.dart';
 
 class Home extends State {
@@ -17,7 +19,8 @@ class Home extends State {
     Colors.blueAccent,
     Colors.yellow,
     Colors.greenAccent,
-    Colors.purpleAccent
+    Colors.purpleAccent,
+    Colors.purple
   ];
 
   Widget renderUnitRow(context, index) {
@@ -34,6 +37,12 @@ class Home extends State {
       .loadString('assets/data/regular_units.json');
 
     final data = JsonDecoder().convert(json);
+
+    final currencies = await Currency().getCurrencies();
+
+    print(jsonDecode(currencies.data)['units']);
+
+    data['Currency'] = jsonDecode(currencies.data)['units'];
 
     setState(() {
       data.forEach((category, key) => {

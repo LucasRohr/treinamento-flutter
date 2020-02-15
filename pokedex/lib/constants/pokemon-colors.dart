@@ -23,7 +23,7 @@ extension TypesExtension on TypesEnum {
         return Colors.blue;
 
       case TypesEnum.bug:
-        return Colors.greenAccent[300];
+        return Colors.green[300];
 
       case TypesEnum.normal:
         return Colors.grey;

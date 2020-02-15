@@ -4,6 +4,8 @@ class PokemonService {
 
   Dio dio = new Dio();
 
+  String baseAdress = 'http://10.0.0.2:3000';
+
   Future<Response> _get(String url) {
 
     try {
@@ -18,9 +20,16 @@ class PokemonService {
   }
 
   Future<Response> getPokemonList() async {
-    String pokemonListUrl = 'http://10.99.196.185:3000/list';
+    String pokemonListUrl = '$baseAdress/list';
 
     return await this._get(pokemonListUrl);
   }
+
+  Future<Response> getPokemonDetailsById(int id) async {
+    String pokemontUrl = '$baseAdress/details/$id';
+
+    return await this._get(pokemontUrl);
+  }
+
 
 }

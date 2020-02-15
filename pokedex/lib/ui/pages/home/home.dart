@@ -1,12 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex/models/pokemon.model.dart';
 import 'package:pokedex/services/pokemon.service.dart';
 import 'package:pokedex/ui/components/bottom-navigation/bottom-navigation.state.dart';
 import 'package:pokedex/ui/components/header/header.dart';
-import 'package:pokedex/ui/components/pokemon-list/pokemon-list.dart';
+import 'package:pokedex/ui/components/pokemon-list/pokemon-list.state.dart';
 import 'package:pokedex/ui/pages/home/home.state.dart';
 
 class Home extends State<HomeState> {
@@ -62,7 +60,7 @@ class Home extends State<HomeState> {
               Container()
             :
               Expanded(
-                child: PokemonList(
+                child: PokemonListState(
                   pokemonList: this.pokemonList,
                 )
               )

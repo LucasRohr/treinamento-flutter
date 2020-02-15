@@ -4,17 +4,20 @@ import 'package:flutter/widgets.dart';
 import 'package:pokedex/constants/pokemon-colors.dart';
 import 'package:pokedex/constants/pokemon-types.dart';
 import 'package:pokedex/models/pokemon.model.dart';
+import 'package:pokedex/ui/components/pokemon-list/pokemon-list.state.dart';
+import 'package:pokedex/ui/pages/details/splash/splash-details.dart';
 
-class PokemonList extends StatelessWidget {
+class PokemonList extends State<PokemonListState> {
 
   final List<Pokemon> pokemonList;
+  bool isGoingToDetails = false;
 
   PokemonList({
     @required this.pokemonList
   });
 
-  String getPokemonNumber(int number) {
-    return number.toString().length == 1 ? '#00$number' : '#0$number';
+  String getPokemonNumber(int id,) {
+    return id.toString().length == 1 ? '#00$id' : '#0$id';
   }
 
   String getPokemonCapitalizedName(String name) {
@@ -77,60 +80,71 @@ class PokemonList extends StatelessWidget {
     );
   }
 
+  void navigateToDetailsSplash(Pokemon pokemon) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => DetailsSplash(pokemon: pokemon,))
+    );
+  }
+
   Widget renderListItem(context, index) {
     return (
-      Container(
-        padding: EdgeInsets.only(top: 8, bottom: 8, left: 10, right: 10),
+      FlatButton(
+        onPressed: () => this.navigateToDetailsSplash(this.pokemonList[index]),
 
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(width: 1, color: Colors.grey[300])
-          )
-        ),
+        child: Container(
+          padding: EdgeInsets.only(top: 8, bottom: 8, left: 5, right: 5),
 
-        child: Row(
-          children: <Widget>[
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 1, color: Colors.grey[300])
+            )
+          ),
 
-            Container(
-              margin: EdgeInsets.only(right: 15),
+          child: Row(
+            children: <Widget>[
 
-              child: Image.network(
-                this.pokemonList[index].imageUrl,
-                width: 60,
-                height: 60,
-              ),
-            ),
-            
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              Container(
+                margin: EdgeInsets.only(right: 15),
 
-              children: <Widget>[
-                Text(
-                  this.getPokemonCapitalizedName(this.pokemonList[index].name),
-
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16
-                  ),
+                child: Image.network(
+                  this.pokemonList[index].imageUrl,
+                  width: 60,
+                  height: 60,
                 ),
+              ),
+              
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
 
-                Text(
-                  this.getPokemonNumber(index + 1),
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15
+                children: <Widget>[
+                  Text(
+                    this.getPokemonCapitalizedName(this.pokemonList[index].name),
+
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16
+                    ),
                   ),
-                )
-              ],
-            ),
 
-            Spacer(),
+                  Text(
+                    this.getPokemonNumber(this.pokemonList[index].id),
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 15
+                    ),
+                  )
+                ],
+              ),
 
-            this.getPokemonTypes(this.pokemonList[index].types)
+              Spacer(),
 
-          ],
-        ),
+              this.getPokemonTypes(this.pokemonList[index].types)
+
+            ],
+          ),
+        )
       )
     );
   }
@@ -138,7 +152,7 @@ class PokemonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 15, right: 15),
+      margin: EdgeInsets.only(left: 10, right: 10),
 
       child: ListView.builder(
         itemBuilder: this.renderListItem,

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pokedex/helpers/color-helper.dart';
 import 'package:pokedex/models/pokemon-details.model.dart';
 import 'package:pokedex/services/pokemon.service.dart';
 import 'package:pokedex/ui/pages/details/details.state.dart';
+import 'package:pokedex/ui/pages/details/pokemon-type/pokemon-type.dart';
+import 'package:pokedex/ui/pages/details/stats/stats-list.dart';
 
 class Details extends State<DetailsState> {
 
   final int pokemonId;
   PokemonDetails pokemonDetails;
+  Color pokemonThemeColor;
 
   Details({
     @required this.pokemonId
@@ -18,6 +22,7 @@ class Details extends State<DetailsState> {
 
     setState(() {
       this.pokemonDetails = PokemonDetails.fromJson(pokemonDetailsResponse.data);
+      this.pokemonThemeColor = ColorHelper().getColorByTypeString(this.pokemonDetails.types[0]);
     });
   }
 
@@ -45,33 +50,9 @@ class Details extends State<DetailsState> {
   Widget getPokemonTypes(List types) {
     if(types.length == 1) {
       return (
-        Container(
-          width: 110,
-          height: 45,
-
-          decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.all(Radius.circular(30))
-          ),
-
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-
-              children: <Widget>[
-                Image.asset(
-                  'assets/images/types/${types[0]}.png'
-                ),
-
-                Text(
-                  types[0].toString().toUpperCase(),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13
-                  ),
-                )
-              ],
-            )
+        PokemonType(
+          color: this.pokemonThemeColor,
+          type: types[0],
         )
       );
     }
@@ -82,63 +63,17 @@ class Details extends State<DetailsState> {
         crossAxisAlignment: CrossAxisAlignment.center,
 
         children: <Widget>[
-          Container(
-            width: 110,
-            height: 45,
-
-            margin: EdgeInsets.only(right: 15),
-
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.all(Radius.circular(30))
-            ),
-
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-
-              children: <Widget>[
-                Image.asset(
-                  'assets/images/types/${types[0]}.png'
-                ),
-
-                Text(
-                  types[0].toString().toUpperCase(),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13
-                  ),
-                )
-              ],
-            )
+          PokemonType(
+            color: this.pokemonThemeColor,
+            type: types[0],
           ),
 
           Container(
-            width: 110,
-            height: 45,
+            margin: EdgeInsets.only(left: 15),
 
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.all(Radius.circular(30))
-            ),
-
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-
-              children: <Widget>[
-                Image.asset(
-                  'assets/images/types/${types[1]}.png'
-                ),
-
-                Text(
-                  types[1].toString().toUpperCase(),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13
-                  ),
-                )
-              ],
+            child: PokemonType(
+              color: ColorHelper().getColorByTypeString(types[1]),
+              type: types[1],
             )
           )
         ],
@@ -153,7 +88,7 @@ class Details extends State<DetailsState> {
 
     return (
       Container(
-        color: Colors.blue,
+        color: this.pokemonThemeColor,
         alignment: Alignment.topCenter,
 
         child: Column(
@@ -245,9 +180,37 @@ class Details extends State<DetailsState> {
                         ),
                       )
                     ),
-
                     
+                    Container(
+                      margin: EdgeInsets.only(top: 25),
 
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+
+                        children: <Widget>[
+
+                          Container(
+                            margin: EdgeInsets.only(bottom: 5),
+
+                            child: Text(
+                              'STATS',
+                              style: TextStyle(
+                                color: this.pokemonThemeColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                          ),
+                          
+                          Container(
+                            width: double.infinity,
+                            height: 250,
+                            child: StatsList(stats: this.pokemonDetails.stats, color: this.pokemonThemeColor,)
+                          )
+                        ],
+                      ),
+                    )
                   ],
                 ),
               )
